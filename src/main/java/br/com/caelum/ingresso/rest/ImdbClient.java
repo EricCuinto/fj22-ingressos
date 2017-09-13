@@ -14,14 +14,16 @@ import br.com.caelum.ingresso.model.Filme;
 public class ImdbClient {
 	private Logger logger = Logger.getLogger(ImdbClient.class);
 
-	public Optional<DetalhesDoFilme> request(Filme filme) {
+	public <T> Optional<T> request(Filme filme, Class<T> tclass) {
+
 		RestTemplate client = new RestTemplate();
 		String titulo = filme.getNome().replace(" ", "+");
 		String url = String.format("https://imdb-fj22.herokuapp.com/imdb?title=%s", titulo);
 
 		try {
-			DetalhesDoFilme detalhesDoFilme = client.getForObject(url, DetalhesDoFilme.class);
-			return Optional.of(detalhesDoFilme);
+			// DetalhesDoFilme detalhesDoFilme = client.getForObject(url,
+			// DetalhesDoFilme.class);
+			return Optional.of(client.getForObject(url, tclass));
 		} catch (RestClientException e) {
 			logger.error(e.getMessage(), e);
 			return Optional.empty();
